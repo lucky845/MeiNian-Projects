@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>demo01:测试插值表达式</title>
+	</head>
+	<body>
+		
+		<div id="app">
+			{{msg}}<br>
+			{{msg1}}<br>
+			{{msg1 + 10}}<br>
+			{{msg1 > 5 ? "大于5":"不大于5"}}
+		</div>
+		
+	</body>
+	<script src="../js/vue.js"></script>
+	<script>
+		
+		var vue = new Vue({
+			el:"#app",
+			data:{
+				msg:"你好,vue.js",
+				msg1:10
+			},
+			methods:{}
+		});
+		
+	</script>
+</html>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.meinian.mapper.TravelItemMapper">
+
+    <!--新增自由行项-->
+    <insert id="add">
+        insert into t_travelitem
+            (code, name, sex, age, price, type, remark, attention)
+        values (#{code},
+                #{name},
+                #{sex},
+                #{age},
+                #{price},
+                #{type},
+                #{remark},
+                #{attention})
+    </insert>
+
+    <!--Page<TravelItem> findTravelItemByQueryString(@Param("queryString") String queryString) throws Exception;-->
+    <select id="findTravelItemByQueryString" resultType="com.atguigu.meinian.pojo.TravelItem">
+        select * from t_travelitem
+        <where>
+            <if test="queryString != '' and queryString != null">
+                code = #{queryString} or name like "%"#{queryString}"%"
+            </if>
+        </where>
+    </select>
+
+    <!--void delete(@Param("id") Integer id) throws Exception;-->
+    <delete id="delete">
+        delete
+        from t_travelitem
+        where id = #{id}
+    </delete>
+
+    <!--TravelItem findById(@Param("id") Integer id) throws Exception;-->
+    <select id="findById" resultType="com.atguigu.meinian.pojo.TravelItem">
+        select *
+        from t_travelitem
+        where id = #{id}
+    </select>
+
+    <!--void update(@Param("travelItem") TravelItem travelItem) throws Exception;-->
+    <update id="update">
+        update t_travelitem
+        set code      = #{code},
+            name      = #{name},
+            sex       = #{sex},
+            age       = #{age},
+            price     = #{price},
+            type      = #{type},
+            attention = #{attention}
+        where id = #{id}
+    </update>
+
+    <!--List<TravelItem> findAll() throws Exception;-->
+    <select id="findAll" resultType="com.atguigu.meinian.pojo.TravelItem">
+        select *
+        from t_travelitem
+    </select>
+
+    <!--List<TravelItem> findTravelItemListById(@Param("id") Integer id);-->
+    <select id="findTravelItemListById" parameterType="int" resultType="com.atguigu.meinian.pojo.TravelItem">
+        select *
+        from t_travelitem
+        where id in (select travelitem_id from t_travelgroup_travelitem where travelgroup_id = #{id})
+    </select>
+
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo" xmlns:bubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--配置提供者的应用信息-->
+    <dubbo:application name="dubbo_provider"/>
+
+
+    <!--配制注册中心的地址-->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+
+    <!--配置访问服务的端口号和协议 默认是20880-->
+    <dubbo:protocol name="dubbo" port="20880"/>
+
+    <!--扫描指定的包,将其包下用@Service注解标注的类作为服务-->
+    <bubbo:annotation package="com.atguigu.dubbo.service.impl"/>
+
+    <!--设置事务-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <constructor-arg name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource" scope="singleton">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--开启事务注解支持-->
+    <!--将其设置为使用cglib代理方式为Service类创建代理对象-->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+</beans>

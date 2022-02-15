@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>demo05:测试v-text和v-html</title>
+</head>
+<body>
+
+<div id="app">
+    <p v-text="msg"></p>
+    <p v-html="msg"></p>
+</div>
+
+</body>
+<script src="../js/vue.js"></script>
+<script>
+    var vue = new Vue({
+        el: "#app",
+        data: {
+            msg: "<h1>你好啊!</h1>"
+        }
+    })
+</script>
+</html>

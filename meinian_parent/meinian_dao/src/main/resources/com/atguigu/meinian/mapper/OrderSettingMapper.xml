@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.meinian.mapper.OrderSettingMapper">
+
+    <!--long findCountByOrderDate(@Param("orderDate") Date orderDate) throws Exception;-->
+    <select id="findCountByOrderDate" resultType="long">
+        select count(*)
+        from t_ordersetting
+        where orderDate = #{orderDate}
+    </select>
+
+
+    <!--void editOrderSettingByOrderDate(@Param("orderSetting") OrderSetting orderSetting) throws Exception;-->
+    <update id="editOrderSettingByOrderDate">
+        update t_ordersetting
+        set number = #{orderSetting.number}
+        where orderDate = #{orderSetting.orderDate}
+    </update>
+
+
+    <!--void addOrderSetting(@Param("orderSetting") OrderSetting orderSetting) throws Exception;-->
+    <insert id="addOrderSetting">
+        insert into t_ordersetting
+        values (null, #{orderSetting.orderDate}, #{orderSetting.number}, 0)
+    </insert>
+
+    <!--List<OrderSetting> findOrderSettingByDate(@Param("startDate") String startDate, @Param("endDate") String endDate) throws Exception;-->
+    <select id="findOrderSettingByDate" resultType="com.atguigu.meinian.pojo.OrderSetting">
+        select *
+        from t_ordersetting
+        where orderDate between #{startDate} and #{endDate}
+    </select>
+
+    <!--OrderSetting getOrderSettingByOrderDate(@Param("orderDate") Date orderDate) throws Exception;-->
+    <select id="getOrderSettingByOrderDate" resultType="com.atguigu.meinian.pojo.OrderSetting">
+        select *
+        from t_ordersetting
+        where orderDate = #{orderDate}
+    </select>
+
+    <!--void editReservationsByOrderDate(@Param("orderDate") Date orderDate) throws Exception;-->
+    <update id="editReservationsByOrderDate">
+        update t_ordersetting
+        set reservations = reservations + 1
+        where orderDate = #{orderDate}
+    </update>
+
+</mapper>

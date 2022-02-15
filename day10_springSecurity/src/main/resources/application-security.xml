@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--开启注解方式权限控制-->
+    <security:global-method-security pre-post-annotations="enabled"/>
+
+    <!--配置资源不拦截-->
+    <security:http security="none" pattern="/js/**"/>
+    <security:http security="none" pattern="/CSS/**"/>
+    <security:http security="none" pattern="/img/**"/>
+    <security:http security="none" pattern="/login.html"/>
+
+    <!--
+        security:http 设置资源的拦截规则
+    -->
+    <security:http auto-config="true" use-expressions="true">
+        <security:intercept-url pattern="/**" access="hasRole('ROLE_ADMIN')"/>
+
+        <!--指定用户访问权限-->
+        <security:intercept-url pattern="/a.html" access="isAuthenticated()"/>
+        <security:intercept-url pattern="/b.html" access="hasAnyAuthority('add')"/>
+        <security:intercept-url pattern="/c.html" access="hasRole('ROLE_ADMIN')"/>
+
+        <security:form-login login-page="/login.html"
+                             username-parameter="username"
+                             password-parameter="password"
+                             login-processing-url="/login.do"
+                             default-target-url="/index.html"
+                             authentication-failure-url="/index.html"
+                             always-use-default-target="true"/>
+        <!--盗链规则过滤器-->
+        <security:csrf disabled="true"/>
+
+        <!--
+            logout： 退出登录
+                        logout-url="/logout.do" 退出登录后的请求路径
+                        logout-success-url="/index.html" 退出登录后的跳转页面
+                        invalidate-session="true" 默认为true 在用户退出后 http session失效
+        -->
+        <security:logout logout-url="/logout.do"
+                         logout-success-url="/index.html"
+                         invalidate-session="true"/>
+    </security:http>
+
+    <context:component-scan base-package="com.atguigu"/>
+
+    <!--配置密码加密策略-->
+    <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+    <security:authentication-manager>
+        <!--authentication-provider  认证提供者，执行具体的认证逻辑-->
+        <security:authentication-provider user-service-ref="userService">
+            <!--指定密码加密策略-->
+            <security:password-encoder ref="passwordEncoder"/>
+
+            <!--
+            <security:user-service>
+                <security:user name="admin" authorities="ROLE_ADMIN" password="{noop}admin"/>
+            </security:user-service>
+            -->
+
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+
+</beans>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>demo02:测试v-on绑定事件</title>
+	</head>
+	<body>
+
+		<div id="app">
+			<input type="button" value="点击" v-on:click="testClick()" />
+			<input type="button" value="双击" v-on:dblclick="testdblclick()" />
+
+		</div>
+
+	</body>
+	<script src="../js/vue.js"></script>
+	<script>
+		var vue = new Vue({
+			el: "#app",
+			data: {},
+			methods: {
+				testClick: function() {
+					console.log("单击");
+				},
+				testdblclick: function() {
+					console.log("双击");
+				}
+			}
+		});
+	</script>
+</html>

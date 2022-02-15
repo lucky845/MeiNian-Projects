@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!--一、定义需要放行的资源-->
+    <!--http :用于指定相关权限控制
+        指定那些资源不需要进行权限校验，可以使用通配符
+    -->
+    <security:http security="none" pattern="/js/**"/>
+    <security:http security="none" pattern="/img/**"/>
+    <security:http security="none" pattern="/css/**"/>
+    <security:http security="none" pattern="/plugins/**"/>
+    <!--登录页也需要放行-->
+    <security:http security="none" pattern="/login.html"/>
+
+    <!--二、定义那些链接不可以放行，即需要有角色和权限才能放行-->
+    <!--
+        http： 用于定义相关权限控制
+        auto-config： 是否自动配置
+                设置为true时框架会提供一些默认的配置，例如提供默认的登录界面、登出界面等
+                设置为false时需要提供登陆表单的配置，否者会出错
+        use-expressions ： 用于指定intercept 中的access是否使用表达式
+    -->
+    <security:http auto-config="true" use-expressions="true">
+        <!--
+        intercept-url 用于指定一个拦截规则
+        pattern： 对那些url进行权限控制
+        access： 在请求对应的url 时需要什么权限，默认配置时他应该是一个以逗号分割的角色列表
+                 请求的用户只需要拥有其中的角色就能成功访问对应的url
+        isAuthenticated： 需要经过认证后才能访问（不是匿名用户）
+    -->
+        <security:intercept-url pattern="/pages/**" access="isAuthenticated()"/>
+        <!--
+            form-login: 用于定义自定义登录信息
+        -->
+        <security:form-login login-page="/login.html"
+                             username-parameter="username"
+                             password-parameter="password"
+                             login-processing-url="/login.do"
+                             default-target-url="/pages/main.html"
+                             authentication-failure-url="/login.html"
+                             always-use-default-target="true"/>
+        <!--
+            csrf: 对应CsrfFilter过滤器
+            disabled： 是否启用CsrfFilter过滤器， 如果使用自定义登录页面需要关闭此项
+            否则登录操作会被禁用
+        -->
+        <security:csrf disabled="true"/>
+        <!--
+            logout: 退出登录
+            logout-url ： 退出操作对应的请求路径
+            logout-success-url ： 退出成功后条转的页面
+        -->
+        <security:logout logout-url="/logout.do"
+                         logout-success-url="/login.html"
+                         invalidate-session="true"/>
+        <!--设置在页面可以访问iframe访问受保护的页面，默认为不允许-->
+        <security:headers>
+            <security:frame-options policy="SAMEORIGIN"/>
+        </security:headers>
+        <!--自定义异常处理-->
+        <security:access-denied-handler ref="customAccessDeniedHandler"/>
+    </security:http>
+
+    <!--三、认证管理，定义登录账号和密码，并授予访问的角色、权限
+        authentication-provider： 认证提供者，执行具体的认证逻辑
+    -->
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="springSecurityUserService">
+            <!--指定加密策略-->
+            <security:password-encoder ref="passwordEncoder"/>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+    <!--配置密码加密对象-->
+    <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+</beans>

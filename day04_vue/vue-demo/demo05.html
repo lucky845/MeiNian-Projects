@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>demo05:测试@mouseover</title>
+    <style>
+        .father {
+            width: 500px;
+            height: 500px;
+            background: red;
+        }
+
+        .son {
+            width: 300px;
+            height: 300px;
+            background: blue;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="father" @mouseover="testFather()">
+        <!--<div class="son" @mouseover.stop="alert('son')"></div>-->
+        <div class="son" @mouseover.stop="testSon()"></div>
+    </div>
+</div>
+</body>
+<script src="../js/vue.js"></script>
+<script>
+    var vue = new Vue({
+        el: "#app",
+        data: {},
+        methods: {
+            testSon: function () {
+                alert("son");
+            },
+            testFather: function () {
+                alert('father');
+                // event.stopImmediatePropagation();
+            }
+        }
+    })
+</script>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo12:测试axios的获取user.json</title>
+</head>
+<body>
+
+<div id="app">
+
+    {{msg}}
+
+</div>
+
+</body>
+<script src="../js/axios.js"></script>
+<script src="../js/vue.js"></script>
+<script>
+
+    var vue = new Vue({
+        el: "#app",
+        data: {
+            msg: "helloword"
+        },
+        methods: {
+            init: function () {
+                alert("传入的参数是: " + this.msg);
+                axios.get("../data/user.json").then(res => {
+                    console.log(res);
+                    alert(JSON.stringify(res.data));
+                    alert(res.data[0].username);
+                    this.msg = res.data[1].username;
+                });
+            }
+        },
+        mounted: function () {
+            this.init();
+        }
+    });
+
+</script>
+</html>

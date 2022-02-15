@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.meinian.mapper.MemberMapper">
+
+    <!--Member getMemberByTelephone(@Param("telephone") String telephone) throws Exception;-->
+    <select id="getMemberByTelephone" resultType="com.atguigu.meinian.pojo.Member">
+        select *
+        from t_member
+        where phoneNumber = #{telephone}
+    </select>
+
+    <!--void addMember(@Param("member") Member member) throws Exception;-->
+    <insert id="addMember" useGeneratedKeys="true" keyProperty="id">
+        insert into t_member
+        values (null,
+                #{member.fileNumber},
+                #{member.name},
+                #{member.sex},
+                #{member.idCard},
+                #{member.phoneNumber},
+                #{member.regTime},
+                #{member.password},
+                #{member.email},
+                #{member.birthday},
+                #{member.remark})
+    </insert>
+
+    <!--Integer findMemberCountBeforeDate(@Param("regTime") String regTime);-->
+    <select id="findMemberCountBeforeDate" resultType="int">
+        select count(id)
+        from t_member
+        where regTime &lt;= #{regTime}
+    </select>
+
+    <!--Integer getTodayNewMember(@Param("regTime") Date regTime);-->
+    <select id="getTodayNewMember" resultType="int">
+        select count(id)
+        from t_member
+        where regTime = #{regTime}
+    </select>
+
+    <!--Integer getTotalMember();-->
+    <select id="getTotalMember" resultType="int">
+        select count(id)
+        from t_member
+    </select>
+
+    <!--Integer getThisWeekAndMonthNewMember(@Param("date") Date date);-->
+    <select id="getThisWeekAndMonthNewMember" resultType="int">
+        select count(id)
+        from t_member
+        where regTime >= #{date}
+    </select>
+
+</mapper>

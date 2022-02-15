@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.meinian.mapper.SetmealMapper">
+
+    <!--void addSetmeal(Setmeal setmeal) throws Exception;-->
+    <insert id="addSetmeal" useGeneratedKeys="true" keyProperty="id">
+        insert into t_setmeal
+        values (null,
+                #{name},
+                #{code},
+                #{helpCode},
+                #{sex},
+                #{age},
+                #{price},
+                #{remark},
+                #{attention},
+                #{img})
+    </insert>
+
+    <!--void addSetmealAndTravelGroup(@Param("setmealId") Integer setmealId,@Param("travelGroupIds") Integer travelGroupIds) throws Exception;-->
+    <insert id="addSetmealAndTravelGroup">
+        insert into t_setmeal_travelgroup values
+        <foreach collection="travelGroupIds" item="travelGroupId" separator=",">
+            (#{setmealId},#{travelGroupId})
+        </foreach>
+    </insert>
+
+    <!--Page<Setmeal> findPage(String queryString) throws Exception;-->
+    <select id="findPage" resultType="com.atguigu.meinian.pojo.Setmeal">
+        select * from t_setmeal
+        <where>
+            <if test="queryString != '' and queryString != null">
+                code = #{queryString} or helpCode = #{queryString} or name like "%"#{queryString}"%"
+            </if>
+        </where>
+    </select>
+
+    <!--Setmeal findById(Integer setmealId) throws Exception;-->
+    <select id="findById" resultType="com.atguigu.meinian.pojo.Setmeal">
+        select *
+        from t_setmeal
+        where id = #{setmealId}
+    </select>
+
+    <!--List<Integer> findTravelGroupIdBySetmealId(Integer setmealId) throws Exception;-->
+    <select id="findTravelGroupIdBySetmealId" resultType="int">
+        select travelgroup_id
+        from t_setmeal_travelgroup
+        where setmeal_id = #{setmealId}
+    </select>
+
+    <!--void editSetmeal(Setmeal setmeal) throws Exception;-->
+    <update id="editSetmeal" useGeneratedKeys="true" keyProperty="id">
+        update t_setmeal
+        set name      = #{name},
+            code      = #{code},
+            helpCode  = #{helpCode},
+            sex       = #{sex},
+            age       = #{age},
+            price     = #{price},
+            remark    = #{remark},
+            attention = #{attention}
+        where id = #{id}
+    </update>
+
+    <!--void deleteSetmealAndTravelGroup(@Param("setmealId") Integer setmealId) throws Exception;-->
+    <delete id="deleteSetmealAndTravelGroup">
+        delete
+        from t_setmeal_travelgroup
+        where setmeal_id = #{setmealId}
+    </delete>
+
+    <!--void deleteSetmeal(Integer setmealId) throws Exception;-->
+    <delete id="deleteSetmeal">
+        delete
+        from t_setmeal
+        where id = #{setmealId}
+    </delete>
+
+    <!--List<Setmeal> findAll() throws Exception;-->
+    <select id="findAll" resultType="com.atguigu.meinian.pojo.Setmeal">
+        select *
+        from t_setmeal
+    </select>
+
+    <!--Setmeal findSetmealById(@Param("id") Integer id) throws Exception;-->
+    <resultMap id="findSetmealByIdResultMap" type="com.atguigu.meinian.pojo.Setmeal">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="helpCode" column="helpCode"/>
+        <result property="sex" column="sex"/>
+        <result property="age" column="age"/>
+        <result property="price" column="price"/>
+        <result property="remark" column="remark"/>
+        <result property="attention" column="attention"/>
+        <result property="img" column="img"/>
+        <collection property="travelGroups" column="id"
+                    select="com.atguigu.meinian.mapper.TravelGroupMapper.findTravelGroupListById"/>
+    </resultMap>
+    <select id="findSetmealById" parameterType="int" resultMap="findSetmealByIdResultMap">
+        select *
+        from t_setmeal
+        where id = #{id}
+    </select>
+
+    <!--List<Map<String, Object>> findSetmealCount();-->
+    <select id="findSetmealCount" resultType="map">
+        select s.name, count(s.id) value
+        from t_setmeal s
+                 left join t_order o on s.id = o.setmeal_id
+        group by s.name
+    </select>
+
+</mapper>

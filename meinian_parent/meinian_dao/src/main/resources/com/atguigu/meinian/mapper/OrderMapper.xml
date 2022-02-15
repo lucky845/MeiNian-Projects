@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.meinian.mapper.OrderMapper">
+
+    <!--void addOrder(@Param("order") Order order) throws Exception;-->
+    <insert id="addOrder" useGeneratedKeys="true" keyColumn="id" keyProperty="order.id">
+        insert into t_order(member_id, orderDate, orderType, orderStatus, setmeal_id)
+        values (#{order.memberId},
+                #{order.orderDate},
+                #{order.orderType},
+                #{order.orderStatus},
+                #{order.setmealId})
+    </insert>
+
+    <!--Integer getCountByCondition(@Param("order") Order order) throws Exception;-->
+    <select id="getCountByCondition" resultType="int">
+        select count(1)
+        from t_order
+        where orderDate = #{order.orderDate}
+    </select>
+
+    <!--Map<String, Object> findById(@Param("id") Integer id) throws Exception;-->
+    <select id="findById" resultType="map">
+        select t_member.name  member,
+               t_setmeal.name setmeal,
+               t_order.orderDate,
+               t_order.orderType
+        from t_order
+                 left join t_member
+                           on t_order.member_id = t_member.id
+                 left join t_setmeal
+                           on t_order.setmeal_id = t_setmeal.id
+        where t_order.id = #{id}
+    </select>
+
+    <!--Integer getTodayOrderNumber(@Param("orderDate") Date orderDate);-->
+    <select id="getTodayOrderNumber" resultType="int">
+        select count(id)
+        from t_order
+        where orderDate = #{orderDate}
+    </select>
+
+    <!--Integer getTodayVisitsNumber(@Param("orderDate") Date orderDate);-->
+    <select id="getTodayVisitsNumber" resultType="int">
+        select count(id)
+        from t_order
+        where orderDate = #{orderDate}
+          and orderStatus = '已出游'
+    </select>
+
+    <!--Integer getThisWeekAndMonthOrderNumber(@Param("startDate") Date startDate,@Param("endDate") Date endDate);-->
+    <select id="getThisWeekAndMonthOrderNumber" resultType="int">
+        select count(id)
+        from t_order
+        where orderDate between #{startDate} and #{endDate}
+    </select>
+
+    <!--Integer getThisWeekAndMonthVisitsNumber(@Param("startDate") Date startDate,@Param("endDate") Date endDate);-->
+    <select id="getThisWeekAndMonthVisitsNumber" resultType="int">
+        select count(id)
+        from t_order
+        where orderDate between #{startDate} and #{endDate}
+          and orderStatus = '已出游'
+    </select>
+
+    <!--List<Map<String, Object>> getHotSetmeal();-->
+    <select id="getHotSetmeal" resultType="map">
+        select s.name, count(o.id) seteaml_count, count(o.id) / (select count(id) from t_order) proportion
+        from t_setmeal s
+                 left join t_order o on s.id = o.setmeal_id
+        group by s.name
+        order by seteaml_count desc
+        limit 4
+    </select>
+
+</mapper>

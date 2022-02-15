@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo10:测试todoList</title>
+    <style type="text/css">
+        .list_con {
+            width: 600px;
+            margin: 50px auto 0;
+        }
+
+        .inputtxt {
+            width: 550px;
+            height: 30px;
+            border: 1px solid #ccc;
+            padding: 0px;
+            text-indent: 10px; /* 段落缩进 */
+        }
+
+        .inputbtn {
+            width: 40px;
+            height: 32px;
+            padding: 0px;
+            border: 1px solid #ccc;
+        }
+
+        .list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .list li {
+            height: 40px;
+            line-height: 40px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .list li span {
+            float: left;
+        }
+
+        .list li a {
+            float: right;
+            text-decoration: none; /* 文本修饰, none表示标准的文本 */
+            margin: 0 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="list_con" id="app">
+
+    <h2>To do list</h2>
+    <input type="text" name="" id="txt1" class="inputtxt" v-model="txt"/>
+    <input type="button" name="" value="增加" id="btn1" class="inputbtn" @click="FnAdd()"/>
+
+    <ul id="list" class="list">
+
+        <li v-for="(item,index) in content">
+            <span>{{item}}</span>
+            <a href="javascript:;" class="up" @click="fnUp(index)">↑</a>
+            <a href="javascript:;" class="down" @click="fnDown(index)">↓</a>
+            <a href="javascript:;" class="del" @click="fnDel(index)">删除</a>
+        </li>
+
+    </ul>
+
+</div>
+
+</body>
+<script src="../js/vue.js"></script>
+<script>
+
+    var vue = new Vue({
+        el: "#app",
+        data: {
+            content: ["学习HTML", "学习CSS", "学习JS"],
+            txt: ""
+        },
+        methods: {
+            /**
+             * 添加
+             * @constructor
+             */
+            FnAdd: function () {
+                if (this.txt == null || this.txt.length === 0) {
+                    alert("你还没有输入,请输入后再添加!");
+                } else {
+                    this.content.push(this.txt);
+                    this.txt = "";
+                }
+                document.getElementById("txt1").focus();
+            },
+            /**
+             * 删除
+             * @param index
+             */
+            fnDel: function (index) {
+                this.content.splice(index, 1);
+            },
+            /**
+             * 上移
+             * @param index
+             */
+            fnUp: function (index) {
+                if (index === 0) {
+                    alert("亲,到顶了!");
+                    return;
+                }
+                this.content.splice(index - 1, 0, this.content[index]);
+                this.content.splice(index + 1, 1);
+            },
+            /**
+             * 下移
+             * @param index
+             */
+            fnDown: function (index) {
+                if (index === this.content.length - 1) {
+                    alert("亲,到底了!");
+                    return;
+                }
+                this.content.splice(index + 2, 0, this.content[index]);
+                this.content.splice(index, 1);
+            }
+        }
+    });
+
+</script>
+</html>

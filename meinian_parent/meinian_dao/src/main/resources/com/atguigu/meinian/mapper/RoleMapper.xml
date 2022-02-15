@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.meinian.mapper.RoleMapper">
+
+    <!--Set<Role> findRolesByUserId(@Param("userId") Integer userId);-->
+    <resultMap id="roleMap" type="com.atguigu.meinian.pojo.Role">
+        <id property="id" column=" id"/>
+        <result property="name" column=" name"/>
+        <result property="keyword" column=" keyword"/>
+        <result property="description" column=" description"/>
+        <collection property="permissions" column="id"
+                    select="com.atguigu.meinian.mapper.PermissionMapper.findPermissionsByRoleId"/>
+    </resultMap>
+    <select id="findRolesByUserId" resultMap="roleMap">
+        select r.*
+        from t_role r
+                 left join t_user_role tur on r.id = tur.role_id
+        where user_id = #{userId}
+    </select>
+</mapper>

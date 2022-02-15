@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--配制消费者应用信息-->
+    <dubbo:application name="dubbo_consumer"/>
+
+    <!--配制注册中心的地址-->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+
+    <!--扫描组件,将其下有@Controller注解的类作为组件管理-->
+    <dubbo:annotation package="com.atguigu.dubbo.controller"/>
+
+    <!--配制消费者启动时是否检查提供者-->
+    <dubbo:consumer cache="false"/>
+
+</beans>

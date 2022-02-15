@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo03:跑马灯</title>
+</head>
+<body>
+
+<div id="app">
+
+    <input type="button" value="浪起来" @click="lang()">
+    <input type="button" value="低调" @click="stop()">
+    <p>{{msg}}</p>
+
+</div>
+
+</body>
+<script src="../js/vue.js"></script>
+<script>
+
+    var vue = new Vue({
+        el: "#app",
+        data: {
+            msg: "硅谷,别浪~~",
+            interval:null
+        },
+        methods: {
+            lang: function () {
+                this.interval = setInterval(() => {
+                    var start = this.msg.substring(1);
+                    var end = this.msg.substring(0, 1);
+                    this.msg = start + end;
+                }, 100);
+            },
+            stop: function () {
+                this.msg = "硅谷,别浪~~";
+                clearInterval(this.interval);
+            }
+        }
+    });
+
+</script>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo08:测试v-for</title>
+</head>
+
+<body>
+
+<div id="app">
+
+    <ul>
+        <li v-for="(index,major) in majors">{{index}}--{{major}}</li>
+    </ul>
+    <br/>
+    <table border="1">
+        <tr>
+            <th>id</th>
+            <th>username</th>
+            <th>age</th>
+        </tr>
+        <tr v-for="user in userList">
+            <th v-text="user.id"></th>
+            <th v-text="user.username"></th>
+            <th v-text="user.age"></th>
+        </tr>
+    </table>
+    <p v-for="count in 10">这是第{{count}}次!</p>
+
+</div>
+
+</body>
+<script src="../js/vue.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            /*普通数组*/
+            majors: ["java", "html", "python", "c#"],
+            /*对象数组*/
+            userList: [
+                {id: 1, username: "张三", age: 1},
+                {id: 2, username: "李四", age: 2},
+                {id: 3, username: "王五", age: 3}
+            ]
+        }
+    })
+</script>
+</html>

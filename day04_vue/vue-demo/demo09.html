@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo09:测试v-if 和 v-show</title>
+</head>
+
+<body>
+
+<div id="app">
+
+    <p v-if="flag">测试v-if</p>
+    <p v-show="flag">测试v-show</p>
+
+</div>
+
+</body>
+<script src="../js/vue.js"></script>
+<script>
+
+    var vue = new Vue({
+        el: "#app",
+        data: {
+           // p标签是否展示
+           flag:false
+        }
+    });
+
+</script>
+</html>

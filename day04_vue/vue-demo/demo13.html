@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo3</title>
+</head>
+<body>
+
+<div id="app">
+
+    <input type="text" value="msg" v-model="msg">
+    <input type="button" value="提交" @click="init()">
+
+</div>
+
+</body>
+<script src="../js/vue.js"></script>
+<script src="../js/axios.js"></script>
+<script>
+
+   new Vue({
+       el:"#app",
+       data:{
+           msg: ""
+       },
+       methods:{
+           init:function () {
+               axios.get('/user?id=123',{
+                   msg:this.msg
+               }).then(res => {
+                   let data = res.data;
+                   console.log(data);
+               }).catch(err => {
+                   console.log(err);
+               });
+           }
+       }
+   });
+
+</script>
+</html>
